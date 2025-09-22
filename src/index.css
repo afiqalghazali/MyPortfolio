@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap");
+@import "tailwindcss";
+
+/* Base setup */
+@layer base {
+	html,
+	body {
+		@apply w-[100dvw] overflow-x-hidden bg-[#0a0a14] text-white scroll-smooth font-['Mona_Sans',sans-serif];
+	}
+}
+
+/* Utilities & Components */
+@layer components {
+	.section-padding {
+		@apply mt-20 px-5 md:mt-40 md:px-10;
+	}
+
+	/* Responsive card grid */
+	.card-responsive {
+		@apply grid grid-cols-2 mx-auto p-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8;
+	}
+
+	@media (min-width: 1024px) {
+		.card-responsive .card:nth-child(1),
+		.card-responsive .card:nth-child(4),
+		.card-responsive .card:nth-child(13),
+		.card-responsive .card:nth-child(16) {
+			grid-column: span 2;
+			grid-row: span 2;
+		}
+	}
+
+	/* Border glow effect */
+	.card--border-glow::after {
+		content: "";
+		@apply absolute inset-0 transition-opacity duration-300 ease-in-out pointer-events-none rounded-3xl z-10 p-[6px];
+		background: radial-gradient(
+			var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+			rgba(var(--glow-color), calc(var(--glow-intensity) * 0.8)) 0%,
+			rgba(var(--glow-color), calc(var(--glow-intensity) * 0.4)) 30%,
+			transparent 60%
+		);
+		mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		-webkit-mask: linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
+		mask-composite: subtract;
+		-webkit-mask-composite: xor;
+	}
+
+	.card--border-glow:hover::after {
+		@apply opacity-100;
+	}
+	.card--border-glow:hover {
+		box-shadow: 0 4px 20px rgba(46, 24, 78, 0.4),
+			0 0 30px rgba(var(--glow-color), 0.2);
+	}
+
+	/* Particle effect */
+	.particle::before {
+		content: "";
+		@apply absolute -inset-[2px] rounded-full;
+		background: rgba(var(--glow-color), 0.2);
+		z-index: -1;
+	}
+	.particle-container:hover {
+		box-shadow: 0 4px 20px rgba(46, 24, 78, 0.2),
+			0 0 30px rgba(var(--glow-color), 0.2);
+	}
+}
+
+/* Hero word slider */
+@layer utilities {
+	.slide {
+		@apply inline-block flex-col transition-[all] [transition-timing-function:cubic-bezier(0.71,0.03,0.34,1)];
+	}
+	.wrapper {
+		@apply flex flex-col;
+		animation: wordSlider 12s infinite cubic-bezier(0.9, 0.01, 0.3, 0.99);
+	}
+	@keyframes wordSlider {
+		0% {
+			transform: translateY(0.5%);
+		}
+		33% {
+			transform: translateY(-33%);
+		}
+		67% {
+			transform: translateY(-67%);
+		}
+	}
+}
