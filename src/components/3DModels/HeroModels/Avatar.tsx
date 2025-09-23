@@ -6,7 +6,7 @@ import * as THREE from "three";
 
 type AvatarProps = JSX.IntrinsicElements["group"];
 
-export const Avatar: React.FC<AvatarProps> = (props) => {
+const Avatar: React.FC<AvatarProps> = (props) => {
 	const group = useRef<THREE.Group>(null);
 
 	// Load avatar + clone to keep skeleton safe
@@ -71,3 +71,5 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
 };
 
 useGLTF.preload("models/my-avatar.glb");
+
+export default Avatar;

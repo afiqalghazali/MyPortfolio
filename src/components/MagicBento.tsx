@@ -1,6 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { techStackIcons } from "@/constants";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export interface BentoCardProps {
 	color?: string;
@@ -543,6 +546,35 @@ const MagicBento: React.FC<BentoProps> = ({
 	const gridRef = useRef<HTMLDivElement>(null);
 	const isMobile = useMobileDetection();
 	const shouldDisableAnimations = disableAnimations || isMobile;
+
+	useEffect(() => {
+		if (shouldDisableAnimations || !gridRef.current) return;
+
+		const ctx = gsap.context(() => {
+			const cards = gsap.utils.toArray<HTMLElement>(".card");
+			if (cards.length) {
+				const tl = gsap.timeline({
+					scrollTrigger: {
+						trigger: cards[0],
+						start: "top 40%",
+						toggleActions: "restart none none reverse",
+					},
+				});
+
+				tl.fromTo(
+					cards,
+					{ y: 200, opacity: 0 },
+					{ y: 0, opacity: 1, duration: 1, ease: "power3.out", stagger: 0.1 }
+				);
+
+				const restart = () => tl.restart();
+				window.addEventListener("navClick", restart);
+				return () => window.removeEventListener("navClick", restart);
+			}
+		}, gridRef);
+
+		return () => ctx.revert();
+	}, [shouldDisableAnimations]);
 
 	return (
 		<>

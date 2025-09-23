@@ -6,8 +6,8 @@ const navLinks = [
 		link: "#projects",
 	},
 	{
-		name: "Skills",
-		link: "#skills",
+		name: "Tech Stack",
+		link: "#tech-stack",
 	},
 ];
 

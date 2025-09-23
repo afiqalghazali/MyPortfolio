@@ -1,46 +1,64 @@
-import TitleHeader from "../components/TitleHeader";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+// src/sections/TechStack.tsx
+import React, { useEffect, useRef, memo } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import TitleHeader from "@/components/TitleHeader";
 import MagicBento from "@/components/MagicBento";
 
-const TechStack = () => {
-	useGSAP(() => {
-		gsap.fromTo(
-			".tech-card",
-			{
-				y: 50,
-				opacity: 0,
-			},
-			{
-				y: 0,
-				opacity: 1,
-				duration: 1,
-				ease: "power2.inOut",
-				stagger: 0.2,
+gsap.registerPlugin(ScrollTrigger);
+
+const TechStack: React.FC = () => {
+	const sectionRef = useRef<HTMLElement>(null);
+
+	useEffect(() => {
+		const ctx = gsap.context(() => {
+			// Animate the section title
+			const tl = gsap.timeline({
 				scrollTrigger: {
-					trigger: "#skills",
-					start: "top center",
+					trigger: ".section-title",
+					start: "top 20%",
+					toggleActions: "restart none none reverse",
 				},
-			}
-		);
-	});
+			});
+
+			tl.from(".section-title", {
+				y: 200,
+				opacity: 0,
+				duration: 1,
+				ease: "power3.out",
+			});
+
+			// Restart animation when navClick event occurs
+			const restart = () => tl.restart();
+			window.addEventListener("navClick", restart);
+
+			return () => window.removeEventListener("navClick", restart);
+		}, sectionRef);
+
+		return () => ctx.revert();
+	}, []);
 
 	return (
-		<section id="skills" className="flex-center section-padding">
-			<div className="size-full md:px-10 px-5">
+		<section id="tech-stack" className="section" ref={sectionRef}>
+			<div className="w-full md:px-10 px-5">
+				{/* Section Header */}
 				<TitleHeader
-					title="My Preferred Tech Stack"
-					sub="🤝 The Skills I Bring To The Table"
+					title="Tech Stack & Skills"
+					sub="⚡ The tools and technologies I rely on"
+					className="section-title"
 				/>
+
+				{/* MagicBento */}
 				<div className="mt-10 w-full">
 					<MagicBento
-						textAutoHide={true}
-						enableStars={true}
-						enableSpotlight={true}
-						enableBorderGlow={true}
-						enableTilt={true}
-						enableMagnetism={true}
-						clickEffect={true}
+						textAutoHide
+						enableStars
+						enableSpotlight
+						enableBorderGlow
+						enableTilt
+						enableMagnetism
+						clickEffect
 						spotlightRadius={300}
 						particleCount={24}
 					/>
@@ -50,4 +68,4 @@ const TechStack = () => {
 	);
 };
 
-export default TechStack;
+export default memo(TechStack);

@@ -1,11 +1,13 @@
 type TitleHeaderProps = {
 	title: string;
 	sub: string;
+	className?: string;
 };
 
-const TitleHeader = ({ title, sub }: TitleHeaderProps) => {
+const TitleHeader = ({ title, sub, className }: TitleHeaderProps) => {
 	return (
-		<div className="flex flex-col items-center justify-center gap-5">
+		<div
+			className={`flex flex-col items-center justify-center gap-5 ${className}`}>
 			<div className="bg-gray-100/10 py-2 px-4 rounded-full text-sm md:text-base">
 				<p>{sub}</p>
 			</div>

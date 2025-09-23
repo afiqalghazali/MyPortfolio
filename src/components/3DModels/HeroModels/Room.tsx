@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 type RoomProps = JSX.IntrinsicElements["group"];
 
-export const Room: React.FC<RoomProps> = (props) => {
+const Room: React.FC<RoomProps> = (props) => {
 	const { nodes, materials } = useGLTF(
 		"models/stylised-room.glb"
 	) as unknown as {
@@ -228,3 +228,5 @@ export const Room: React.FC<RoomProps> = (props) => {
 };
 
 useGLTF.preload("models/stylised-room.glb");
+
+export default Room;

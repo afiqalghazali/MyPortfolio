@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 type FrameProps = JSX.IntrinsicElements["group"];
 
-export const Frame: React.FC<FrameProps> = (props) => {
+const Frame: React.FC<FrameProps> = (props) => {
 	const { nodes, materials } = useGLTF(
 		"models/frame-lowpoly.glb"
 	) as unknown as {
@@ -31,3 +31,5 @@ export const Frame: React.FC<FrameProps> = (props) => {
 };
 
 useGLTF.preload("models/frame-lowpoly.glb");
+
+export default Frame;
