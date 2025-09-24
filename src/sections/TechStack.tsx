@@ -1,43 +1,27 @@
-// src/sections/TechStack.tsx
-import React, { useEffect, useRef, memo } from "react";
+import React, { useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import TitleHeader from "@/components/TitleHeader";
 import MagicBento from "@/components/MagicBento";
+import { useGsapAnimations } from "@/components/animations/useGsapAnimations";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const TechStack: React.FC = () => {
-	const sectionRef = useRef<HTMLElement>(null);
+	const sectionRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
 
-	useEffect(() => {
-		const ctx = gsap.context(() => {
-			// Animate the section title
-			const tl = gsap.timeline({
+	useGsapAnimations(sectionRef, ({ duration, ease }) => {
+		return gsap
+			.timeline({
 				scrollTrigger: {
 					trigger: ".section-title",
-					start: "top 20%",
+					start: "top 80%",
 					toggleActions: "restart none none reverse",
 				},
-			});
-
-			tl.from(".section-title", {
-				y: 200,
-				opacity: 0,
-				duration: 1,
-				ease: "power3.out",
-			});
-
-			// Restart animation when navClick event occurs
-			const restart = () => tl.restart();
-			window.addEventListener("navClick", restart);
-
-			return () => window.removeEventListener("navClick", restart);
-		}, sectionRef);
-
-		return () => ctx.revert();
-	}, []);
+			})
+			.from(".section-title", { y: 200, opacity: 0, duration, ease });
+	});
 
 	return (
 		<section id="tech-stack" className="section" ref={sectionRef}>

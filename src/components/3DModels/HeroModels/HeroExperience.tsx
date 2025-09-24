@@ -9,8 +9,7 @@ const HeroExperience = () => {
 		<Canvas
 			shadows
 			camera={{ position: [0, 0, 1], fov: 30 }}
-			gl={{ antialias: true, powerPreference: "high-performance" }} // ✅ reduce GPU stress
-		>
+			gl={{ antialias: true, powerPreference: "high-performance" }}>
 			{/* Controls */}
 			<OrbitControls
 				enablePan={false}

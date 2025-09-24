@@ -22,7 +22,7 @@ const projects = [
 		id: 1,
 		title: "Markir App",
 		des: "Markir is an app designed to detect and visualize parking locations, providing details like location name, distance, and available parking spots.",
-		img: "https://github.com/user-attachments/assets/1bbc292f-c8b4-4409-af50-fded24a9178f/",
+		img: "images/thumbnails/markir_thumbnail.webp",
 		iconLists: [
 			"images/logos/android.svg",
 			"images/logos/kotlin.svg",
@@ -34,7 +34,7 @@ const projects = [
 		id: 2,
 		title: "Story App",
 		des: "Connect through stories, photos, and locations on an interactive map. Share your moments with friends and explore new places together.",
-		img: "https://github.com/user-attachments/assets/12c3f401-82b2-4fa7-a970-06f9617b2ddb",
+		img: "images/thumbnails/story_thumbnail.webp",
 		iconLists: [
 			"images/logos/android.svg",
 			"images/logos/kotlin.svg",
@@ -46,7 +46,7 @@ const projects = [
 		id: 3,
 		title: "XYZ Payroll",
 		des: "A modern and responsive web front-end application for managing employee data and payrolls.",
-		img: "https://github.com/user-attachments/assets/fedbbd20-d6bc-4914-82c2-40954aa44b5e",
+		img: "images/thumbnails/xyz_thumbnail.webp",
 		iconLists: [
 			"images/logos/html5.svg",
 			"images/logos/css3.svg",
@@ -59,7 +59,7 @@ const projects = [
 		id: 4,
 		title: "Tri Dharma",
 		des: "A modern, responsive web project showcasing the principles of Tri Dharma University with interactive UI and smooth design.",
-		img: "https://github.com/user-attachments/assets/b36fe687-2d00-4e30-8900-c5beaa30cfbf",
+		img: "images/thumbnails/tri_dharma_thumbnail.webp",
 		iconLists: [
 			"images/logos/html5.svg",
 			"images/logos/css3.svg",

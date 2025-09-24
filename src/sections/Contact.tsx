@@ -1,14 +1,15 @@
-import { useRef, useState, useEffect, memo } from "react";
+import { useRef, useState, memo } from "react";
 import emailjs from "@emailjs/browser";
 import TitleHeader from "../components/TitleHeader";
 import { socmed } from "@/constants";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGsapAnimations } from "@/components/animations/useGsapAnimations";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Contact = () => {
-	const sectionRef = useRef<HTMLDivElement>(null);
+	const sectionRef = useRef<HTMLDivElement>(null!);
 	const formRef = useRef<HTMLFormElement>(null);
 
 	const [loading, setLoading] = useState(false);
@@ -39,95 +40,84 @@ const Contact = () => {
 		}
 	};
 
-	useEffect(() => {
-		const ctx = gsap.context(() => {
-			// Title animation
-			const titleAnim = gsap.fromTo(
-				".section-title",
-				{ y: 200, opacity: 0 },
-				{
-					y: 0,
-					opacity: 1,
-					duration: 1,
-					ease: "power3.out",
-					scrollTrigger: {
-						trigger: ".section-title",
-						start: "top 0%",
-						toggleActions: "restart none none reverse",
-					},
-				}
-			);
-
-			// Connect heading
-			const headingAnim = gsap.fromTo(
-				".connect-title",
-				{ y: 200, opacity: 0 },
-				{
-					y: 0,
-					opacity: 1,
-					duration: 1,
-					ease: "power3.out",
-					scrollTrigger: {
-						trigger: ".connect-title",
-						start: "top 80%",
-						toggleActions: "restart none none reverse",
-					},
-				}
-			);
-
-			// Social media cards
-			const smCards = gsap.utils.toArray<HTMLElement>(".animate-item");
-			let smTl: gsap.core.Timeline | null = null;
-			if (smCards.length) {
-				smTl = gsap.timeline({
-					scrollTrigger: {
-						trigger: smCards[0],
-						start: "top 20%",
-						toggleActions: "restart none none reverse",
-					},
-				});
-				smTl.fromTo(
-					smCards,
-					{ y: 200, opacity: 0 },
-					{ y: 0, opacity: 1, duration: 1, ease: "power3.out", stagger: 0.2 }
-				);
+	useGsapAnimations(sectionRef, ({ duration, ease }) => {
+		// Title Animation
+		const titleAnim = gsap.fromTo(
+			".section-title",
+			{ y: 200, opacity: 0 },
+			{
+				y: 0,
+				opacity: 1,
+				duration,
+				ease,
+				scrollTrigger: {
+					trigger: ".section-title",
+					start: "top 80%",
+					toggleActions: "restart none none reverse",
+				},
 			}
+		);
 
-			// Form fields animation
-			const fields = gsap.utils.toArray<HTMLElement>(
-				".contact-form label, .contact-form input, .contact-form textarea, .contact-form button"
-			);
-			let formTl: gsap.core.Timeline | null = null;
-			if (fields.length) {
-				formTl = gsap.timeline({
-					scrollTrigger: {
-						trigger: ".contact-form",
-						start: "top 20%",
-						toggleActions: "restart none none reverse",
-					},
-				});
-				formTl.from(fields, {
-					y: 200,
-					opacity: 0,
-					duration: 1,
-					ease: "power3.out",
-					stagger: 0.2,
-				});
+		// Form Fields Animation
+		const formFields = gsap.utils.toArray<HTMLElement>(
+			".contact-form label, .contact-form input, .contact-form textarea, .contact-form button"
+		);
+		const formTl = formFields.length
+			? gsap
+					.timeline({
+						scrollTrigger: {
+							trigger: ".contact-form",
+							start: "top 80%",
+							toggleActions: "restart none none reverse",
+						},
+					})
+					.from(formFields, {
+						y: 200,
+						opacity: 0,
+						duration,
+						ease,
+						stagger: 0.2,
+					})
+			: null;
+
+		const socmedDiv = gsap.fromTo(
+			".socmed-container",
+			{ y: 200, opacity: 0 },
+			{
+				y: 0,
+				opacity: 1,
+				duration,
+				ease,
+				scrollTrigger: {
+					trigger: ".socmed-container",
+					start: "top 80%",
+					toggleActions: "restart none none reverse",
+				},
 			}
+		);
 
-			// Restart all animations on nav click
-			const restart = () => {
-				titleAnim.restart();
-				headingAnim.restart();
-				smTl?.restart();
-				formTl?.restart();
-			};
-			window.addEventListener("navClick", restart);
-			return () => window.removeEventListener("navClick", restart);
-		}, sectionRef);
+		const smCards = gsap.utils.toArray<HTMLElement>(".socmed-card");
+		const smTl = smCards.length
+			? gsap
+					.timeline({
+						scrollTrigger: {
+							trigger: smCards[0],
+							start: "top 80%",
+							toggleActions: "restart none none reverse",
+						},
+					})
+					.fromTo(
+						smCards,
+						{ y: 200, opacity: 0 },
+						{ y: 0, opacity: 1, duration, ease, stagger: 0.1 }
+					)
+			: null;
 
-		return () => ctx.revert();
-	}, []);
+		// Return all animations
+		return [titleAnim, formTl, socmedDiv, smTl].filter(
+			Boolean
+		) as gsap.core.Animation[];
+	});
 
 	return (
 		<section ref={sectionRef} id="contact" className="section">
@@ -138,9 +128,9 @@ const Contact = () => {
 					className="section-title"
 				/>
 
-				<div className="flex flex-col lg:flex-row mt-16 gap-4 lg:gap-16">
+				<div className="flex flex-col xl:flex-row mt-16 gap-4 lg:gap-16">
 					{/* Form */}
-					<div className="flex-1">
+					<div className="flex-1 xl:flex-2">
 						<div className="contact-form bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-xl p-10">
 							<form
 								ref={formRef}
@@ -199,7 +189,7 @@ const Contact = () => {
 
 								{/* Submit */}
 								<button type="submit" className="w-full">
-									<div className="w-full py-4 bg-white text-black font-semibold rounded-md flex justify-center items-center gap-2">
+									<div className="w-full py-4 bg-white text-black font-semibold rounded-md flex justify-center items-center gap-2 cursor-pointer hover:bg-transparent hover:text-white border border-transparent hover:border-white transition-all duration-300">
 										{loading ? "Sending..." : "Send Message"}
 									</div>
 								</button>
@@ -209,18 +199,18 @@ const Contact = () => {
 
 					{/* Social Media */}
 					<div className="flex-1">
-						<div className="size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-4xl p-10">
-							<h3 className="connect-title text-2xl font-bold mb-6">
+						<div className="socmed-container size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-4xl p-10">
+							<h3 className="socmed-card text-2xl font-bold mb-6">
 								Connect With Me
 							</h3>
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div className="flex flex-col gap-4">
 								{socmed.map((item) => (
 									<a
 										key={item.name}
 										href={item.links}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="animate-item border border-gray-100/10 flex items-center gap-2 p-4 bg-gray-700/10 backdrop-blur-lg rounded-lg hover:bg-blue-600/10 hover:border-blue-600/10 transition">
+										className="socmed-card border border-gray-100/10 flex items-center gap-2 p-4 bg-gray-700/10 backdrop-blur-lg rounded-lg hover:bg-gray-100/10 transition-all duration-300">
 										<div className="size-12 p-2 flex justify-center items-center">
 											<img src={item.icon} alt={item.name} />
 										</div>

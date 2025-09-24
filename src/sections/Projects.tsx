@@ -1,68 +1,49 @@
-// src/sections/Projects.tsx
-import React, { useEffect, useRef, memo } from "react";
+import React, { useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { IoSend } from "react-icons/io5";
 
 import TitleHeader from "@/components/TitleHeader";
 import { projects } from "@/constants";
+import { useGsapAnimations } from "@/components/animations/useGsapAnimations";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Projects: React.FC = () => {
-	const sectionRef = useRef<HTMLElement>(null);
+	const sectionRef = useRef<HTMLElement>(null!) as React.RefObject<HTMLElement>;
 
-	useEffect(() => {
-		const ctx = gsap.context(() => {
-			// Animate title
-			const titleAnim = gsap.fromTo(
-				".section-title",
-				{ y: 200, opacity: 0 },
-				{
-					y: 0,
-					opacity: 1,
-					duration: 1,
-					ease: "power3.out",
-					scrollTrigger: {
-						trigger: ".section-title",
-						start: "top 80%",
-						toggleActions: "restart none none reverse",
-					},
-				}
-			);
-
-			// Animate project cards with stagger
-			const cards = gsap.utils.toArray<HTMLElement>(".animate-item");
-			let cardTl: gsap.core.Timeline | null = null;
-			if (cards.length) {
-				cardTl = gsap.timeline({
-					scrollTrigger: {
-						trigger: cards[0],
-						start: "top 60%",
-						toggleActions: "restart none none reverse",
-					},
-				});
-				cardTl.from(cards, {
-					y: 200,
-					opacity: 0,
-					duration: 1,
-					ease: "power3.out",
-					stagger: 0.3,
-				});
+	useGsapAnimations(sectionRef, ({ duration, ease }) => {
+		const titleAnim = gsap.fromTo(
+			".section-title",
+			{ y: 200, opacity: 0 },
+			{
+				y: 0,
+				opacity: 1,
+				duration,
+				ease,
+				scrollTrigger: {
+					trigger: ".section-title",
+					start: "top 80%",
+					toggleActions: "restart none none reverse",
+				},
 			}
+		);
 
-			// Restart animations when nav triggers event
-			const restart = () => {
-				titleAnim.restart();
-				cardTl?.restart();
-			};
-			window.addEventListener("navClick", restart);
+		const cards = gsap.utils.toArray<HTMLElement>(".animate-item");
+		const cardTl = cards.length
+			? gsap
+					.timeline({
+						scrollTrigger: {
+							trigger: cards[0],
+							start: "top 80%",
+							toggleActions: "restart none none reverse",
+						},
+					})
+					.from(cards, { y: 200, opacity: 0, duration, ease, stagger: 0.4 })
+			: null;
 
-			return () => window.removeEventListener("navClick", restart);
-		}, sectionRef);
-
-		return () => ctx.revert();
-	}, []);
+		return [titleAnim, cardTl].filter(Boolean) as gsap.core.Animation[];
+	});
 
 	return (
 		<section id="projects" ref={sectionRef} className="section xl:mt-0">
@@ -75,12 +56,12 @@ const Projects: React.FC = () => {
 				/>
 
 				{/* Project Cards */}
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-10">
 					{projects.map((project) => (
 						<div
 							key={project.id}
 							className="animate-item will-change-transform will-change-opacity">
-							<div className="card-inner bg-gray-700/10 bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-100/10 rounded-lg p-8 flex flex-col gap-3 items-center justify-start shadow-lg overflow-hidden transform transition-all duration-500 ease-in-out hover:scale-[1.03] hover:shadow-xl hover:border-gray-100/20 will-change-transform">
+							<div className="card-inner bg-gray-700/10 bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-200/10 rounded-lg p-8 flex flex-col gap-3 items-center justify-start shadow hover:shadow-white/20 overflow-hidden transform transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-lg hover:border-gray-100/40 will-change-transform">
 								{/* Thumbnail */}
 								<div className="w-full overflow-hidden">
 									<img
@@ -120,7 +101,7 @@ const Projects: React.FC = () => {
 												href={project.link}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="flex font-medium text-sm md:text-base text-blue-500 hover:text-blue-400 transition">
+												className="flex border font-semibold text-xs md:text-sm text-blue-500  py-2 px-4 rounded-lg border-blue-600 hover:border-transparent hover:bg-blue-600 hover:text-white transition-all duration-300">
 												GitHub Repo <IoSend className="mx-2 rotate-315" />
 											</a>
 										</div>

@@ -1,11 +1,18 @@
-// src/sections/Hero.tsx
-import React, { useEffect, useRef, useState, memo } from "react";
+import React, {
+	useEffect,
+	useRef,
+	useState,
+	memo,
+	useCallback,
+	useMemo,
+} from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { words } from "@/constants";
 import GlowButton from "@/components/GlowButton";
 import HeroExperience from "@/components/3DModels/HeroModels/HeroExperience";
+import { useGsapAnimations } from "@/components/animations/useGsapAnimations";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,14 +22,16 @@ ScrollTrigger.config({
 });
 
 const Hero: React.FC = () => {
-	const sectionRef = useRef<HTMLElement>(null);
+	const sectionRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
 	const [showModel, setShowModel] = useState(false);
 
 	useEffect(() => {
-		// Delay showing the 3D model for better FCP
 		const timer = setTimeout(() => setShowModel(true), 2000);
+		return () => clearTimeout(timer);
+	}, []);
 
-		const ctx = gsap.context(() => {
+	const createTimeline = useCallback(
+		({ duration, ease }: { duration: number; ease: string }) => {
 			const tl = gsap.timeline({
 				scrollTrigger: {
 					trigger: sectionRef.current,
@@ -30,30 +39,29 @@ const Hero: React.FC = () => {
 					end: "bottom top",
 					toggleActions: "restart none none reverse",
 				},
-				defaults: { ease: "power3.out", duration: 1 },
+				defaults: { duration, ease },
 			});
 
 			tl.from(".hero-title h1", {
-				y: 50,
+				y: 100,
 				opacity: 0,
-				stagger: 0.2,
+				stagger: 0.4,
 				force3D: true,
 			})
-				.from(".hero-sub", { y: 30, opacity: 0, force3D: true }, "-=0.5")
-				.from(".hero-btn", { x: -30, opacity: 0, force3D: true }, "-=0.4");
+				.from(".hero-sub", { y: 50, opacity: 0, force3D: true })
+				.from(".hero-btn", { x: -50, opacity: 0, force3D: true });
 
-			// Restart animations when nav triggers event
-			const restart = () => tl.restart();
-			window.addEventListener("navClick", restart);
+			return tl;
+		},
+		[]
+	);
 
-			return () => window.removeEventListener("navClick", restart);
-		}, sectionRef);
+	const gsapDefaults = useMemo(
+		() => ({ duration: 0.5, ease: "power3.out" }),
+		[]
+	);
 
-		return () => {
-			clearTimeout(timer);
-			ctx.revert();
-		};
-	}, []);
+	useGsapAnimations(sectionRef, createTimeline, gsapDefaults);
 
 	return (
 		<section
@@ -61,9 +69,9 @@ const Hero: React.FC = () => {
 			ref={sectionRef}
 			className="relative overflow-hidden mb-20 md:mb-0"
 			aria-label="Hero section">
-			<div className="relative z-10 mt-32 md:mt-52 xl:mt-32 md:h-dvh flex flex-col gap-20 xl:flex-row xl:items-center xl:justify-center">
+			<div className="relative z-10 mt-32 md:mt-52 xl:mt-20 md:h-fit xl:h-dvh flex flex-col gap-20 xl:flex-row xl:items-center xl:justify-center">
 				{/* Left: Hero Text */}
-				<header className="flex flex-col justify-center w-screen md:w-full px-5 md:px-20">
+				<header className="flex flex-col justify-center w-screen md:w-full top-0 px-5 md:px-20 xl:px-40">
 					<div className="flex flex-col gap-4 sm:gap-8">
 						{/* Title */}
 						<div className="hero-title flex flex-col gap-2 font-semibold lg:text-6xl sm:text-5xl text-2xl will-change-transform will-change-opacity">
@@ -98,15 +106,22 @@ const Hero: React.FC = () => {
 
 						{/* CTA Button */}
 						<div className="hero-btn will-change-transform will-change-opacity">
-							<GlowButton description="See My Work" ref="#projects" />
+							<GlowButton
+								text="See My Work"
+								ref="#projects"
+								color="#1D4ED8"
+								baseColor="#fff"
+								backgroundColor="#0f172a"
+								textColor="#fff"
+							/>
 						</div>
 					</div>
 				</header>
 
 				{/* Right: 3D Model */}
-				<div className="xl:w-[70%] w-[100vw] h-full xl:absolute flex items-center justify-center xl:-top-20 top-24 xl:-right-20 right-0">
+				<div className="xl:w-[70%] w-full h-full xl:absolute flex items-center justify-center xl:-right-20 right-0">
 					{showModel && (
-						<div className="w-[clamp(250px,30vw,500px)] aspect-square cursor-grab will-change-transform will-change-opacity">
+						<div className="w-[clamp(250px,50vw,400px)] aspect-square cursor-grab will-change-transform will-change-opacity">
 							<HeroExperience />
 						</div>
 					)}

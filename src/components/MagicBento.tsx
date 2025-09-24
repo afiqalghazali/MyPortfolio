@@ -556,7 +556,7 @@ const MagicBento: React.FC<BentoProps> = ({
 				const tl = gsap.timeline({
 					scrollTrigger: {
 						trigger: cards[0],
-						start: "top 40%",
+						start: "top 80%",
 						toggleActions: "restart none none reverse",
 					},
 				});
@@ -564,7 +564,7 @@ const MagicBento: React.FC<BentoProps> = ({
 				tl.fromTo(
 					cards,
 					{ y: 200, opacity: 0 },
-					{ y: 0, opacity: 1, duration: 1, ease: "power3.out", stagger: 0.1 }
+					{ y: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.1 }
 				);
 
 				const restart = () => tl.restart();

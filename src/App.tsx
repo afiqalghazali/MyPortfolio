@@ -6,21 +6,14 @@ import Hero from "@/sections/Hero";
 const Showcase = lazy(() => import("@/sections/Projects"));
 const TechStack = lazy(() => import("@/sections/TechStack"));
 const Contact = lazy(() => import("@/sections/Contact"));
-const Footer = lazy(() => import("@/sections/Footer"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 const App: React.FC = () => {
 	return (
-		<main
-			className="absolute inset-0 z-0 min-h-screen"
-			style={{
-				background:
-					"radial-gradient(125% 125% at 50% 90%, #0a0a14 40%, #0d1a36 100%)",
-			}}>
+		<main>
 			<NavBar />
 			<Hero />
-
-			{/* Below-the-fold sections are lazy-loaded */}
-			<Suspense fallback={<SectionFallback />}>
+			<Suspense>
 				<Showcase />
 				<TechStack />
 				<Contact />
@@ -29,11 +22,5 @@ const App: React.FC = () => {
 		</main>
 	);
 };
-
-const SectionFallback: React.FC = () => (
-	<div className="flex items-center justify-center py-20 text-muted-foreground">
-		<span className="animate-pulse">Loading...</span>
-	</div>
-);
 
 export default memo(App);
