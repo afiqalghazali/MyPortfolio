@@ -5,11 +5,16 @@ const NavBar = () => {
 	const [scrolled, setScrolled] = useState(false);
 
 	useEffect(() => {
-		const handleScroll = () => setScrolled(window.scrollY > 10);
+		const handleScroll = () => {
+			const currentScroll =
+				window.pageYOffset || document.documentElement.scrollTop;
+			setScrolled(currentScroll > 10);
+		};
+
 		window.addEventListener("scroll", handleScroll, { passive: true });
+
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
-
 	const handleNavClick = (link: string) => {
 		window.dispatchEvent(new CustomEvent("navClick", { detail: link }));
 	};

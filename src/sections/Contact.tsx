@@ -14,12 +14,24 @@ const Contact = () => {
 
 	const [loading, setLoading] = useState(false);
 	const [form, setForm] = useState({ name: "", email: "", message: "" });
+	const [isFocused, setIsFocused] = useState(false);
+	const [isAfterFocus, setIsAfterFocus] = useState(false);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
 		setForm({ ...form, [name]: value });
+	};
+
+	const handleFocus = () => {
+		setIsFocused(true);
+		setIsAfterFocus(false);
+	};
+
+	const handleBlur = () => {
+		setIsFocused(false);
+		setIsAfterFocus(true);
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,6 +53,8 @@ const Contact = () => {
 	};
 
 	useGsapAnimations(sectionRef, ({ duration, ease }) => {
+		if (isFocused || isAfterFocus) return [];
+
 		// Title Animation
 		const titleAnim = gsap.fromTo(
 			".section-title",
@@ -147,6 +161,8 @@ const Contact = () => {
 										name="name"
 										value={form.name}
 										onChange={handleChange}
+										onFocus={handleFocus}
+										onBlur={handleBlur}
 										placeholder="What’s your good name?"
 										required
 										className="w-full px-4 py-4 md:text-base text-sm placeholder:text-blue-50/50 focus:outline-none bg-blue-100/10 rounded-md"
@@ -164,6 +180,8 @@ const Contact = () => {
 										name="email"
 										value={form.email}
 										onChange={handleChange}
+										onFocus={handleFocus}
+										onBlur={handleBlur}
 										placeholder="What’s your email address?"
 										required
 										className="w-full px-4 py-4 md:text-base text-sm placeholder:text-blue-50/50 focus:outline-none bg-blue-100/10 rounded-md"
@@ -180,6 +198,8 @@ const Contact = () => {
 										name="message"
 										value={form.message}
 										onChange={handleChange}
+										onFocus={handleFocus}
+										onBlur={handleBlur}
 										placeholder="How can I help you?"
 										rows={5}
 										required
