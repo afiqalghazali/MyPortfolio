@@ -1,11 +1,4 @@
-import React, {
-	useEffect,
-	useRef,
-	useState,
-	memo,
-	useCallback,
-	useMemo,
-} from "react";
+import React, { useEffect, useRef, useState, memo, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -22,7 +15,7 @@ ScrollTrigger.config({
 });
 
 const Hero: React.FC = () => {
-	const sectionRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
+	const sectionRef = useRef<HTMLElement>(null!);
 	const [showModel, setShowModel] = useState(false);
 
 	useEffect(() => {
@@ -30,38 +23,16 @@ const Hero: React.FC = () => {
 		return () => clearTimeout(timer);
 	}, []);
 
-	const createTimeline = useCallback(
-		({ duration, ease }: { duration: number; ease: string }) => {
-			const tl = gsap.timeline({
-				scrollTrigger: {
-					trigger: sectionRef.current,
-					start: "top 80%",
-					end: "bottom top",
-					toggleActions: "restart none none reverse",
-				},
-				defaults: { duration, ease },
-			});
-
-			tl.from(".hero-title h1", {
-				y: 100,
-				opacity: 0,
-				stagger: 0.4,
-				force3D: true,
-			})
-				.from(".hero-sub", { y: 50, opacity: 0, force3D: true })
-				.from(".hero-btn", { x: -50, opacity: 0, force3D: true });
-
-			return tl;
-		},
+	const animations = useMemo(
+		() => [
+			{ trigger: ".hero-title h1", stagger: 0.4 },
+			{ trigger: ".hero-sub", relativeOffset: "-=0.5" },
+			{ trigger: ".hero-btn" },
+		],
 		[]
 	);
 
-	const gsapDefaults = useMemo(
-		() => ({ duration: 0.5, ease: "power3.out" }),
-		[]
-	);
-
-	useGsapAnimations(sectionRef, createTimeline, gsapDefaults);
+	useGsapAnimations({ sectionRef, animations });
 
 	return (
 		<section
@@ -121,7 +92,7 @@ const Hero: React.FC = () => {
 				{/* Right: 3D Model */}
 				<div className="xl:w-[70%] w-full h-full xl:absolute flex items-center justify-center xl:-right-20 right-0">
 					{showModel && (
-						<div className="w-[clamp(250px,50vw,400px)] aspect-square cursor-grab will-change-transform will-change-opacity">
+						<div className="3d-model w-[clamp(250px,50vw,400px)] aspect-square cursor-grab will-change-transform will-change-opacity">
 							<HeroExperience />
 						</div>
 					)}

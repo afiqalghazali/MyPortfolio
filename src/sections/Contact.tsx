@@ -1,4 +1,4 @@
-import { useRef, useState, memo } from "react";
+import { useRef, useState, memo, useMemo } from "react";
 import emailjs from "@emailjs/browser";
 import TitleHeader from "../components/TitleHeader";
 import { socmed } from "@/constants";
@@ -14,24 +14,12 @@ const Contact = () => {
 
 	const [loading, setLoading] = useState(false);
 	const [form, setForm] = useState({ name: "", email: "", message: "" });
-	const [isFocused, setIsFocused] = useState(false);
-	const [isAfterFocus, setIsAfterFocus] = useState(false);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
 		setForm({ ...form, [name]: value });
-	};
-
-	const handleFocus = () => {
-		setIsFocused(true);
-		setIsAfterFocus(false);
-	};
-
-	const handleBlur = () => {
-		setIsFocused(false);
-		setIsAfterFocus(true);
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,90 +40,29 @@ const Contact = () => {
 		}
 	};
 
-	useGsapAnimations(sectionRef, ({ duration, ease }) => {
-		if (isFocused || isAfterFocus) return [];
-
-		// Title Animation
-		const titleAnim = gsap.fromTo(
-			".section-title",
-			{ y: 200, opacity: 0 },
+	const animations = useMemo(
+		() => [
+			{ trigger: ".section-title" },
+			{ trigger: ".contact-form, .socmed-container" },
 			{
-				y: 0,
-				opacity: 1,
-				duration,
-				ease,
-				scrollTrigger: {
-					trigger: ".section-title",
-					start: "top 80%",
-					toggleActions: "restart none none reverse",
-				},
-			}
-		);
-
-		// Form Fields Animation
-		const formFields = gsap.utils.toArray<HTMLElement>(
-			".contact-form label, .contact-form input, .contact-form textarea, .contact-form button"
-		);
-		const formTl = formFields.length
-			? gsap
-					.timeline({
-						scrollTrigger: {
-							trigger: ".contact-form",
-							start: "top 80%",
-							toggleActions: "restart none none reverse",
-						},
-					})
-					.from(formFields, {
-						y: 200,
-						opacity: 0,
-						duration,
-						ease,
-						stagger: 0.2,
-					})
-			: null;
-
-		const socmedDiv = gsap.fromTo(
-			".socmed-container",
-			{ y: 200, opacity: 0 },
+				trigger:
+					".contact-form label, .contact-form input, .contact-form textarea, .contact-form button",
+				stagger: 0.2,
+			},
 			{
-				y: 0,
-				opacity: 1,
-				duration,
-				ease,
-				scrollTrigger: {
-					trigger: ".socmed-container",
-					start: "top 80%",
-					toggleActions: "restart none none reverse",
-				},
-			}
-		);
+				trigger: ".socmed-container h3, .socmed-container a",
+				stagger: 0.1,
+				relativeOffset: "-=2",
+			},
+		],
+		[]
+	);
 
-		const smCards = gsap.utils.toArray<HTMLElement>(".socmed-card");
-		const smTl = smCards.length
-			? gsap
-					.timeline({
-						scrollTrigger: {
-							trigger: smCards[0],
-							start: "top 80%",
-							toggleActions: "restart none none reverse",
-						},
-					})
-					.fromTo(
-						smCards,
-						{ y: 200, opacity: 0 },
-						{ y: 0, opacity: 1, duration, ease, stagger: 0.1 }
-					)
-			: null;
-
-		// Return all animations
-		return [titleAnim, formTl, socmedDiv, smTl].filter(
-			Boolean
-		) as gsap.core.Animation[];
-	});
+	useGsapAnimations({ sectionRef, animations });
 
 	return (
 		<section ref={sectionRef} id="contact" className="section">
-			<div className="size-full md:px-10 px-5">
+			<div className="w-full md:px-10 px-5">
 				<TitleHeader
 					title="Let’s Connect"
 					sub="💬 Have a question? Let’s talk 🚀"
@@ -145,7 +72,7 @@ const Contact = () => {
 				<div className="flex flex-col xl:flex-row mt-16 gap-4 lg:gap-16">
 					{/* Form */}
 					<div className="flex-1 xl:flex-2">
-						<div className="contact-form bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-xl p-10">
+						<div className="contact-form size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-xl p-10 !transform-none">
 							<form
 								ref={formRef}
 								onSubmit={handleSubmit}
@@ -161,8 +88,6 @@ const Contact = () => {
 										name="name"
 										value={form.name}
 										onChange={handleChange}
-										onFocus={handleFocus}
-										onBlur={handleBlur}
 										placeholder="What’s your good name?"
 										required
 										className="w-full px-4 py-4 md:text-base text-sm placeholder:text-blue-50/50 focus:outline-none bg-blue-100/10 rounded-md"
@@ -180,8 +105,6 @@ const Contact = () => {
 										name="email"
 										value={form.email}
 										onChange={handleChange}
-										onFocus={handleFocus}
-										onBlur={handleBlur}
 										placeholder="What’s your email address?"
 										required
 										className="w-full px-4 py-4 md:text-base text-sm placeholder:text-blue-50/50 focus:outline-none bg-blue-100/10 rounded-md"
@@ -198,8 +121,6 @@ const Contact = () => {
 										name="message"
 										value={form.message}
 										onChange={handleChange}
-										onFocus={handleFocus}
-										onBlur={handleBlur}
 										placeholder="How can I help you?"
 										rows={5}
 										required
@@ -219,10 +140,8 @@ const Contact = () => {
 
 					{/* Social Media */}
 					<div className="flex-1">
-						<div className="socmed-container size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-4xl p-10">
-							<h3 className="socmed-card text-2xl font-bold mb-6">
-								Connect With Me
-							</h3>
+						<div className="socmed-container size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-4xl p-10 !transform-none">
+							<h3 className="text-2xl font-bold mb-6">Connect With Me</h3>
 							<div className="flex flex-col gap-4">
 								{socmed.map((item) => (
 									<a
@@ -230,7 +149,7 @@ const Contact = () => {
 										href={item.links}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="socmed-card border border-gray-100/10 flex items-center gap-2 p-4 bg-gray-700/10 backdrop-blur-lg rounded-lg hover:bg-gray-100/10 transition-all duration-300">
+										className="border border-gray-100/10 flex items-center gap-2 p-4 bg-gray-700/10 backdrop-blur-lg rounded-lg hover:bg-gray-100/10 transition-all duration-300">
 										<div className="size-12 p-2 flex justify-center items-center">
 											<img src={item.icon} alt={item.name} />
 										</div>

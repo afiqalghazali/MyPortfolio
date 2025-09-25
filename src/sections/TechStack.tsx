@@ -1,4 +1,4 @@
-import React, { useRef, memo } from "react";
+import React, { useRef, memo, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -9,19 +9,11 @@ import { useGsapAnimations } from "@/components/animations/useGsapAnimations";
 gsap.registerPlugin(ScrollTrigger);
 
 const TechStack: React.FC = () => {
-	const sectionRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
+	const sectionRef = useRef<HTMLElement>(null!);
 
-	useGsapAnimations(sectionRef, ({ duration, ease }) => {
-		return gsap
-			.timeline({
-				scrollTrigger: {
-					trigger: ".section-title",
-					start: "top 80%",
-					toggleActions: "restart none none reverse",
-				},
-			})
-			.from(".section-title", { y: 200, opacity: 0, duration, ease });
-	});
+	const animations = useMemo(() => [{ trigger: ".section-title" }], []);
+
+	useGsapAnimations({ sectionRef, animations });
 
 	return (
 		<section id="tech-stack" className="section" ref={sectionRef}>

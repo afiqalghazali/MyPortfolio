@@ -1,7 +1,14 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+	useRef,
+	useEffect,
+	useState,
+	useCallback,
+	useMemo,
+} from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { techStackIcons } from "@/constants";
+import { useGsapAnimations } from "./animations/useGsapAnimations";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -417,7 +424,6 @@ const GlobalSpotlight: React.FC<{
 
 				if (effectiveDistance < minDistance) {
 					minDistance = effectiveDistance;
-					// grab card-specific glow color
 					const cardColor =
 						getComputedStyle(cardElement).getPropertyValue("--glow-color");
 					if (cardColor) {
@@ -442,7 +448,6 @@ const GlobalSpotlight: React.FC<{
 				);
 			});
 
-			// update spotlight color dynamically
 			spotlightRef.current.style.background = `
         radial-gradient(circle,
           rgba(${nearestCardColor}, 0.15) 0%,
@@ -543,38 +548,24 @@ const MagicBento: React.FC<BentoProps> = ({
 	clickEffect = true,
 	enableMagnetism = true,
 }) => {
-	const gridRef = useRef<HTMLDivElement>(null);
+	const gridRef = useRef<HTMLDivElement>(null!);
 	const isMobile = useMobileDetection();
 	const shouldDisableAnimations = disableAnimations || isMobile;
 
-	useEffect(() => {
-		if (shouldDisableAnimations || !gridRef.current) return;
+	const animations = useMemo(
+		() => [
+			{
+				trigger: ".card",
+				stagger: 0.1,
+			},
+		],
+		[]
+	);
 
-		const ctx = gsap.context(() => {
-			const cards = gsap.utils.toArray<HTMLElement>(".card");
-			if (cards.length) {
-				const tl = gsap.timeline({
-					scrollTrigger: {
-						trigger: cards[0],
-						start: "top 80%",
-						toggleActions: "restart none none reverse",
-					},
-				});
-
-				tl.fromTo(
-					cards,
-					{ y: 200, opacity: 0 },
-					{ y: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.1 }
-				);
-
-				const restart = () => tl.restart();
-				window.addEventListener("navClick", restart);
-				return () => window.removeEventListener("navClick", restart);
-			}
-		}, gridRef);
-
-		return () => ctx.revert();
-	}, [shouldDisableAnimations]);
+	useGsapAnimations({
+		sectionRef: gridRef,
+		animations,
+	});
 
 	return (
 		<>

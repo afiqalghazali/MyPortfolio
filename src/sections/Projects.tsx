@@ -1,4 +1,4 @@
-import React, { useRef, memo } from "react";
+import React, { useRef, memo, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { IoSend } from "react-icons/io5";
@@ -10,40 +10,17 @@ import { useGsapAnimations } from "@/components/animations/useGsapAnimations";
 gsap.registerPlugin(ScrollTrigger);
 
 const Projects: React.FC = () => {
-	const sectionRef = useRef<HTMLElement>(null!) as React.RefObject<HTMLElement>;
+	const sectionRef = useRef<HTMLElement>(null!);
 
-	useGsapAnimations(sectionRef, ({ duration, ease }) => {
-		const titleAnim = gsap.fromTo(
-			".section-title",
-			{ y: 200, opacity: 0 },
-			{
-				y: 0,
-				opacity: 1,
-				duration,
-				ease,
-				scrollTrigger: {
-					trigger: ".section-title",
-					start: "top 80%",
-					toggleActions: "restart none none reverse",
-				},
-			}
-		);
+	const animations = useMemo(
+		() => [
+			{ trigger: ".section-title" },
+			{ trigger: ".animate-item", stagger: 0.4 },
+		],
+		[]
+	);
 
-		const cards = gsap.utils.toArray<HTMLElement>(".animate-item");
-		const cardTl = cards.length
-			? gsap
-					.timeline({
-						scrollTrigger: {
-							trigger: cards[0],
-							start: "top 80%",
-							toggleActions: "restart none none reverse",
-						},
-					})
-					.from(cards, { y: 200, opacity: 0, duration, ease, stagger: 0.4 })
-			: null;
-
-		return [titleAnim, cardTl].filter(Boolean) as gsap.core.Animation[];
-	});
+	useGsapAnimations({ sectionRef, animations });
 
 	return (
 		<section id="projects" ref={sectionRef} className="section xl:mt-0">
