@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, memo, useMemo } from "react";
+import React, { useRef, memo, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -16,12 +16,6 @@ ScrollTrigger.config({
 
 const Hero: React.FC = () => {
 	const sectionRef = useRef<HTMLElement>(null!);
-	const [showModel, setShowModel] = useState(false);
-
-	useEffect(() => {
-		const timer = setTimeout(() => setShowModel(true), 2000);
-		return () => clearTimeout(timer);
-	}, []);
 
 	const animations = useMemo(
 		() => [
@@ -91,11 +85,9 @@ const Hero: React.FC = () => {
 
 				{/* Right: 3D Model */}
 				<div className="xl:w-[70%] w-full h-full xl:absolute flex items-center justify-center xl:-right-20 right-0">
-					{showModel && (
-						<div className="3d-model w-[clamp(250px,50vw,400px)] aspect-square cursor-grab will-change-transform will-change-opacity">
-							<HeroExperience />
-						</div>
-					)}
+					<div className="3d-model w-[clamp(250px,50vw,400px)] aspect-square cursor-grab will-change-transform will-change-opacity">
+						<HeroExperience />
+					</div>
 				</div>
 			</div>
 		</section>
