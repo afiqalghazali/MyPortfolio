@@ -2,13 +2,6 @@
 
 Welcome to my portfolio! Here, you can explore the projects I've worked on, the skills I've developed, and the technologies I use to build real-world applications.
 
-## Table of Contents
-
-- [About Me](#-about-me)
-- [Tech Stack](#-tech-stack)
-- [Contact](#-contact)
-- [License](#-license)
-
 ## 📖 About Me
 
 Hi! I’m Afiq Alghazali, a passionate developer with a background in Computer Science. I specialize in web development, particularly in building responsive and user-friendly applications. I love working on projects that challenge my skills and allow me to learn new technologies.
