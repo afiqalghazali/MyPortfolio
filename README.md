@@ -8,13 +8,13 @@ Hi! I’m Afiq Alghazali, a passionate developer with a background in Computer S
 
 ## 🔧 Tech Stack
 
-This project is built using **Vite**, **React**, **TypeScript**, **TailwindCSS**, and **Three.js**:
+This project is powered by a modern tech stack:
 
-- **Vite**: A next-generation build tool that offers faster builds and hot module replacement for a better development experience.
-- **React**: A JavaScript library for building user interfaces.
-- **TypeScript**: A superset of JavaScript that adds static typing for better maintainability and scalability.
-- **TailwindCSS**: A utility-first CSS framework for building custom designs without writing custom CSS.
-- **Three.js**: A 3D JavaScript library used for creating and rendering 3D models in the browser.
+- **Vite** – Fast, next-generation build tool.
+- **React** – Efficient, component-based UI library.
+- **TypeScript** – Adding static typing to JavaScript.
+- **TailwindCSS** – Utility-first CSS framework.
+- **Three.js** – 3D graphics library for the web.
 
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Threejs](https://img.shields.io/badge/threejs-black?style=for-the-badge&logo=three.js&logoColor=white)
 
