@@ -43,7 +43,7 @@ const Contact = () => {
 	const animations = useMemo(
 		() => [
 			{ trigger: ".section-title" },
-			{ trigger: ".contact-form, .socmed-container" },
+			{ trigger: ".contact-form, .socmed-container", relativeOffset: "-=0.5" },
 			{
 				trigger:
 					".contact-form label, .contact-form input, .contact-form textarea, .contact-form button",
@@ -69,10 +69,10 @@ const Contact = () => {
 					className="section-title"
 				/>
 
-				<div className="flex flex-col xl:flex-row mt-16 gap-4 lg:gap-16">
+				<div className="flex flex-col xl:flex-row mt-16 gap-8 lg:gap-16">
 					{/* Form */}
 					<div className="flex-1 xl:flex-2">
-						<div className="contact-form size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-xl p-10 !transform-none">
+						<div className="contact-form size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-xl p-8 lg:p-10 !transform-none">
 							<form
 								ref={formRef}
 								onSubmit={handleSubmit}
@@ -140,7 +140,7 @@ const Contact = () => {
 
 					{/* Social Media */}
 					<div className="flex-1">
-						<div className="socmed-container size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-4xl p-10 !transform-none">
+						<div className="socmed-container size-full bg-gray-700/10 backdrop-blur-lg border border-gray-100/10 rounded-4xl p-8 lg:p-10 !transform-none">
 							<h3 className="text-2xl font-bold mb-6">Connect With Me</h3>
 							<div className="flex flex-col gap-4">
 								{socmed.map((item) => (

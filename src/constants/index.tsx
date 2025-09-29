@@ -127,7 +127,7 @@ const techStackIcons = [
 		color: "140, 200, 75",
 	},
 	{
-		title: "VScCode",
+		title: "VS	Code",
 		icon: "images/logos/vscode.svg",
 		color: "60, 153, 212",
 	},
